@@ -1,22 +1,23 @@
 import React from 'react';
+import profilePhoto from '../assets/profile-photo.jpg';
 
 export const About: React.FC = () => {
   return (
     <section id="about" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-12">
+        <div className="flex flex-col md:flex-row items-start gap-12">
           <div className="md:ml-12">
             <img
-              src="/assets/profile-photo.jpg"
+              src={profilePhoto}
               alt="Austin Norquist"
               className="w-48 h-48 md:w-56 md:h-56 rounded-full object-cover border-4 border-gray-200 shadow-lg"
             />
           </div>
           <div className="md:w-3/4">
-            <h1 className="text-4xl font-bold text-gray-900 mb-8">About Me</h1>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">About Me</h1>
             <div className="prose prose-lg max-w-3xl">
-              <p>Originally from Modesto, CA, I made the move to Chico to pursue my education at Chico State. I completed both my Bachelor's and Master's degrees in Computer Science there, which provided me with a strong foundation in software development and systems architecture.</p>
-              <p>Currently, I'm working as an Apprentice DevOps Engineer at Liatrio, where I'm gaining hands-on experience with cloud infrastructure, automation, and modern development practices. When I'm not working, you can find me riding my bike around town, spending quality time with my dog Bernie, or catching up on the latest baseball and Formula 1 races.</p>
+              <p className="text-gray-700 dark:text-gray-300">Originally from Modesto, CA, I made the move to Chico to pursue my education at Chico State. I completed both my Bachelor's and Master's degrees in Computer Science there, which provided me with a strong foundation in software development and systems architecture.</p>
+              <p className="text-gray-700 dark:text-gray-300">Currently, I'm working as an Apprentice DevOps Engineer at Liatrio, where I'm gaining hands-on experience with cloud infrastructure, automation, and modern development practices. When I'm not working, you can find me riding my bike around town, spending quality time with my dog Bernie, or catching up on the latest baseball and Formula 1 races.</p>
               <div className="mt-6 flex space-x-6">
                 <a href="https://github.com/n0rq1" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900">
                   <span className="sr-only">GitHub</span>

@@ -6,7 +6,8 @@
   "homepage": "https://n0rq1.github.io/resume",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build --base=/resume/",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
@@ -21,6 +22,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/node": "^24.0.10",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",

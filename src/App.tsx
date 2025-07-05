@@ -6,6 +6,7 @@ import { Navbar } from './components/Navbar';
 
 function App() {
   const [activeSection, setActiveSection] = useState('about');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
   const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
 
@@ -111,14 +112,94 @@ function App() {
     };
   }, []);
 
+  // Handle scroll to update active section
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['about', 'experience', 'education'];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMenuOpen]);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const menuButton = document.getElementById('menu-button');
+      const menu = document.getElementById('mobile-menu');
+      
+      if (isMenuOpen && menuButton && menu && 
+          !menuButton.contains(e.target as Node) && 
+          !menu.contains(e.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen]);
+
+  // Set initial theme based on user preference
+  useEffect(() => {
+    // Check for saved theme preference or use system preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    // Add transition class after initial render to prevent flash of unstyled content
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.add('transition-colors');
+      document.documentElement.classList.add('duration-200');
+    }, 0);
+    
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <Navbar activeSection={activeSection} />
-      <main className="pt-20">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+      <Navbar 
+        activeSection={activeSection} 
+        setActiveSection={setActiveSection} 
+        isMenuOpen={isMenuOpen} 
+        onMenuToggle={setIsMenuOpen} 
+      />
+      <main className="container mx-auto px-4 py-8">
         <About />
         <Experience />
         <Education />
       </main>
+      <footer className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p> {new Date().getFullYear()} Austin Norquist. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
