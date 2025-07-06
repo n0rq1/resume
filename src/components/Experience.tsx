@@ -1,6 +1,6 @@
 import React from 'react';
 import liatroLogo from '../assets/liatrio-logo.png';
-import chicoLogo from '../assets/chico-state-logo.png';
+import chicoLogo from '../assets/csu-chico-logo.png';
 
 interface ExperienceItem {
   position: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import chicoLogo from '../assets/chico-state-logo.png';
+import chicoLogo from '../assets/csu-chico-logo.png';
 
 interface EducationItem {
   degree: string;
@@ -50,14 +50,17 @@ export const Education: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-1 leading-tight">
                       {item.degree}
                     </h3>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-                      <span className="font-medium text-gray-800 dark:text-gray-200">{item.school}</span>
-                      <span className="hidden sm:inline text-gray-400">•</span>
-                      <span className="text-gray-600 dark:text-gray-400">{item.dates}</span>
+                    <div className="flex flex-col">
+                      <span className="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-200 leading-tight">
+                        {item.school}
+                      </span>
+                      <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                        {item.dates}
+                      </span>
                     </div>
                   </div>
                 </div>

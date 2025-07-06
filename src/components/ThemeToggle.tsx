@@ -6,19 +6,28 @@ export const ThemeToggle = () => {
 
   useEffect(() => {
     // Check for saved user preference, if any
-    const isDark = localStorage.getItem('darkMode') === 'true' || 
-                  (!localStorage.getItem('darkMode') && 
-                   window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    setDarkMode(isDark);
-    document.documentElement.classList.toggle('dark', isDark);
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      setDarkMode(true);
+      document.documentElement.classList.add('dark');
+    } else {
+      setDarkMode(false);
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
 
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', String(newDarkMode));
-    document.documentElement.classList.toggle('dark', newDarkMode);
+    if (newDarkMode) {
+      localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.add('dark');
+    } else {
+      localStorage.setItem('theme', 'light');
+      document.documentElement.classList.remove('dark');
+    }
   };
 
   return (
