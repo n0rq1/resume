@@ -11,9 +11,16 @@ export default defineConfig({
     strictPort: true
   },
   resolve: {
-    alias: {
-      '@': resolve(__dirname, './src')
-    }
+    alias: [
+      {
+        find: /^~(.+)/,
+        replacement: resolve(process.cwd(), 'node_modules/$1')
+      },
+      {
+        find: '@',
+        replacement: resolve(__dirname, 'src')
+      }
+    ]
   },
   build: {
     outDir: 'dist',

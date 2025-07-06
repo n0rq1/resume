@@ -2,7 +2,7 @@
 <html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/assets/cool-picture.png" />
+    <link rel="icon" type="image/png" href="/resume/assets/cool-picture.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,9 +10,27 @@
     <meta name="color-scheme" content="light dark">
     <title>Austin Norquist | DevOps Engineer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Set the theme as soon as possible to prevent flash of incorrect theme
+      (function() {
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        // Check for system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Apply the theme
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
   <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <div id="root"></div>
-    <script type="module" src="./src/main.tsx"></script>
+    <script type="module" src="/resume/src/main.tsx"></script>
   </body>
 </html>

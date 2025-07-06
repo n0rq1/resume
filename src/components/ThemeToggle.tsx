@@ -1,33 +1,74 @@
 import { useState, useEffect } from 'react';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
+// Helper function to safely access localStorage
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    if (typeof window === 'undefined') return null;
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(key, value);
+      // Dispatch a custom event when theme changes
+      document.documentElement.dispatchEvent(
+        new CustomEvent('theme-changed', { detail: { theme: value } })
+      );
+    } catch (error) {
+      console.error('Error setting localStorage:', error);
+    }
+  }
+};
+
 export const ThemeToggle = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
+  // After mounting, sync with the current theme
   useEffect(() => {
-    // Check for saved user preference, if any
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setMounted(true);
     
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setDarkMode(false);
-      document.documentElement.classList.remove('dark');
-    }
+    const updateFromDOM = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setDarkMode(isDark);
+    };
+    
+    // Initial sync
+    updateFromDOM();
+    
+    // Listen for theme changes from other instances
+    const handleThemeChange = () => updateFromDOM();
+    document.documentElement.addEventListener('theme-changed', handleThemeChange);
+    
+    // Cleanup
+    return () => {
+      document.documentElement.removeEventListener('theme-changed', handleThemeChange);
+    };
   }, []);
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    if (newDarkMode) {
-      localStorage.setItem('theme', 'dark');
+  // Update the theme when darkMode changes
+  useEffect(() => {
+    if (!mounted) return;
+    
+    if (darkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      safeLocalStorage.setItem('theme', 'dark');
     } else {
-      localStorage.setItem('theme', 'light');
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+      safeLocalStorage.setItem('theme', 'light');
     }
+  }, [darkMode, mounted]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
 
   return (
