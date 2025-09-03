@@ -9,6 +9,9 @@ function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
   const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
+  // Suppress scroll-driven active updates while performing programmatic smooth scroll
+  const suppressScrollUpdates = useRef(false);
+  const suppressTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     // Set up section refs
@@ -19,6 +22,7 @@ function App() {
     };
 
     const handleScroll = () => {
+      if (suppressScrollUpdates.current) return; // keep the clicked nav item highlighted during smooth scroll
       const scrollPosition = window.scrollY + window.innerHeight / 3; // Changed from /2 to /3
       let currentSection = 'about';
       let closestSection = '';
@@ -69,6 +73,9 @@ function App() {
         if (id && Object.keys(sectionRefs.current).includes(id)) {
           // Update active section immediately
           setActiveSection(id);
+          // Suppress scroll-driven updates briefly so the active state doesn't flicker
+          suppressScrollUpdates.current = true;
+          if (suppressTimeout.current) clearTimeout(suppressTimeout.current);
           
           // Scroll to position the section higher up in the viewport
           const element = document.getElementById(id);
@@ -81,6 +88,11 @@ function App() {
               top: Math.max(0, scrollPosition), // Ensure we don't scroll above the top
               behavior: 'smooth'
             });
+
+            // Re-enable scroll-driven updates after the smooth scroll likely finishes
+            suppressTimeout.current = setTimeout(() => {
+              suppressScrollUpdates.current = false;
+            }, 600);
           }
         }
       }
@@ -109,30 +121,13 @@ function App() {
       }
       window.removeEventListener('scroll', debouncedHandleScroll);
       document.removeEventListener('click', handleClick);
-    };
-  }, []);
-
-  // Handle scroll to update active section
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ['about', 'experience', 'education'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
-          }
-        }
+      if (suppressTimeout.current) {
+        clearTimeout(suppressTimeout.current);
       }
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Removed redundant second scroll listener to avoid fighting the active state during smooth scroll
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -185,14 +180,14 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+    <div className="min-h-screen bg-transparent transition-colors duration-200">
       <Navbar 
         activeSection={activeSection} 
         setActiveSection={setActiveSection} 
         isMenuOpen={isMenuOpen} 
         onMenuToggle={setIsMenuOpen} 
       />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-24 pb-12">
         <About />
         <Experience />
         <Education />

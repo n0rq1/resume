@@ -7,3 +7,139 @@
     @apply w-full h-64;
   }
 }
+
+/* Global polish */
+html { scroll-behavior: smooth; }
+::selection { background-color: rgba(14, 165, 233, 0.25); }
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500;
+  }
+  .card {
+    @apply bg-white/70 dark:bg-gray-900/60 backdrop-blur-md border border-gray-200/70 dark:border-gray-800/60 shadow-sm rounded-2xl;
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:hover:shadow-gray-900/40;
+  }
+  .glass-nav {
+    @apply bg-white/70 dark:bg-black/40 backdrop-blur supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-black/30 border-b border-gray-200/60 dark:border-gray-800/70;
+  }
+}
+
+/* Simple fade/slide animation */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up { animation: fade-up 400ms ease-out both; }
+
+/* Fancy hover animations for hero emphasis */
+@keyframes shine {
+  from { background-position: 0% 50%; }
+  to { background-position: 200% 50%; }
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 0px rgba(56, 189, 248, 0.0), 0 0 0px rgba(99, 102, 241, 0.0); }
+  50% { text-shadow: 0 0 12px rgba(56, 189, 248, 0.35), 0 0 24px rgba(99, 102, 241, 0.25); }
+}
+
+@keyframes underline-sweep {
+  0% { transform: translateX(-10%) scaleX(0.1); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(0%) scaleX(1); opacity: 1; }
+}
+
+@layer utilities {
+  .hover-shine {
+    background-image: linear-gradient(90deg, theme(colors.sky.400), theme(colors.blue.400), theme(colors.indigo.400), theme(colors.sky.400));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: transform 300ms ease, filter 300ms ease;
+  }
+  .hover-shine:hover { animation: shine 1.5s linear infinite; filter: saturate(1.2); }
+
+  .neon-glow:hover { animation: glow 1.5s ease-in-out infinite; }
+
+  .underline-shimmer {
+    position: relative;
+  }
+  .underline-shimmer::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -4px;
+    height: 2px;
+    background: linear-gradient(90deg, theme(colors.sky.400), theme(colors.blue.500), theme(colors.indigo.400));
+    transform-origin: left center;
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  .underline-shimmer:hover::after {
+    animation: underline-sweep 500ms ease forwards;
+  }
+
+  .fancy-kube {
+    @apply cursor-pointer select-none font-extrabold tracking-wide;
+  }
+  .fancy-kube:hover {
+    @apply scale-[1.01];
+  }
+
+  /* Glam style (no gradient text): gold tone + sparkles */
+  .glam-text {
+    @apply text-amber-500 dark:text-amber-300;
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.35));
+    transition: filter 200ms ease, transform 200ms ease;
+  }
+  .glam-text:hover {
+    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.55));
+  }
+
+  @keyframes twinkle {
+    0% { opacity: .45; transform: scale(.85) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(18deg); }
+    100% { opacity: .45; transform: scale(.85) rotate(0deg); }
+  }
+
+  .glam-sparkles { position: relative; display: inline-block; }
+  .glam-sparkles::before,
+  .glam-sparkles::after {
+    content: '✦';
+    position: absolute;
+    font-size: 1.1rem;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    pointer-events: none;
+    color: theme(colors.amber.400);
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
+    z-index: 1;
+  }
+  .glam-sparkles::before { right: -1rem; top: -0.6rem; }
+  .glam-sparkles::after { left: -1rem; bottom: -0.8rem; color: theme(colors.indigo.300); text-shadow: 0 0 8px rgba(165, 180, 252, 0.35); }
+  .glam-sparkles:hover::before { opacity: 1; animation: twinkle 1.4s ease-in-out infinite; }
+  .glam-sparkles:hover::after { opacity: 1; animation: twinkle 1.9s ease-in-out infinite; }
+
+  /* Auxiliary sparkles (adds two more) */
+  .glam-sparkles-aux { position: relative; display: inline-block; }
+  .glam-sparkles-aux::before,
+  .glam-sparkles-aux::after {
+    content: '✦';
+    position: absolute;
+    font-size: 0.85rem;
+    line-height: 1;
+    opacity: 0;
+    pointer-events: none;
+    color: theme(colors.amber.300);
+    text-shadow: 0 0 6px rgba(245, 158, 11, 0.3);
+    z-index: 1;
+  }
+  .glam-sparkles-aux::before { left: 50%; top: -1rem; transform: translateX(-50%); }
+  .glam-sparkles-aux::after { right: 10%; bottom: -1rem; color: theme(colors.sky.300); text-shadow: 0 0 6px rgba(125, 211, 252, 0.3); }
+  .glam-sparkles:hover .glam-sparkles-aux::before { opacity: 1; animation: twinkle 1.2s ease-in-out infinite; }
+  .glam-sparkles:hover .glam-sparkles-aux::after { opacity: 1; animation: twinkle 1.6s ease-in-out infinite; }
+}

@@ -29,55 +29,113 @@ const experienceItems: ExperienceItem[] = [
 export const Experience: React.FC = () => {
 
   return (
-    <section id="experience" className="py-20 bg-white dark:bg-gray-900 transition-colors duration-200">
+    <section id="experience" className="py-20 bg-transparent transition-colors duration-200 animate-fade-up">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">Experience</h2>
-        <div className="space-y-8">
-          {experienceItems.map((item, index) => (
-            <div 
-              key={index} 
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg dark:hover:shadow-xl dark:shadow-gray-700/50"
-            >
-              <div className="p-6">
-                <div className="flex items-start">
-                  {item.logo && (
-                    <div className="flex-shrink-0 mr-6">
-                      <div className="p-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-                        <img
-                          src={item.logo}
-                          alt={`${item.company} logo`}
-                          className="w-14 h-14 object-contain"
-                        />
+        <div className="relative">
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-800" />
+          <div className="space-y-12">
+            {experienceItems.map((item, index) => (
+              <div key={index} className="relative grid grid-cols-1 md:grid-cols-2 md:gap-10 items-start">
+                {/* Timeline node */}
+                <div className="hidden md:block absolute left-1/2 -translate-x-1/2 mt-2">
+                  <div className="h-3 w-3 rounded-full bg-sky-500 ring-4 ring-sky-500/20" />
+                </div>
+
+                {/* Left column (even indexes on left in md+) */}
+                <div className={`${index % 2 === 0 ? 'md:pr-10 md:col-start-1' : 'md:col-start-1 md:order-2 md:pl-10'}`}>
+                  {index % 2 === 0 ? (
+                    <div className="card card-hover">
+                      <div className="p-6">
+                        <div className="flex items-start gap-4">
+                          {item.logo && (
+                            <div className="flex-shrink-0">
+                              <div className="p-2 bg-white/80 dark:bg-gray-900/70 rounded-xl ring-1 ring-gray-200/70 dark:ring-gray-800/70">
+                                <img src={item.logo} alt={`${item.company} logo`} className="w-12 h-12 object-contain" />
+                              </div>
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">{item.position}</h3>
+                            <span className="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-sky-500/10 text-sky-600 dark:text-sky-300 ring-1 ring-sky-500/20">{item.dates}</span>
+                            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">{item.company}</div>
+                            {item.description && (<p className="mt-3 text-gray-600 dark:text-gray-300">{item.description}</p>)}
+                            {item.skills && (
+                              <div className="mt-4 pt-4 border-t border-gray-200/60 dark:border-gray-800/70 flex flex-wrap gap-2">
+                                {item.skills.map((skill, i) => (
+                                  <span key={i} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">{skill}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="md:hidden card card-hover">
+                      {/* On mobile, always show the card in flow */}
+                      <div className="p-6">
+                        <div className="flex items-start gap-4">
+                          {item.logo && (
+                            <div className="flex-shrink-0">
+                              <div className="p-2 bg-white/80 dark:bg-gray-900/70 rounded-xl ring-1 ring-gray-200/70 dark:ring-gray-800/70">
+                                <img src={item.logo} alt={`${item.company} logo`} className="w-12 h-12 object-contain" />
+                              </div>
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">{item.position}</h3>
+                            <span className="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-sky-500/10 text-sky-600 dark:text-sky-300 ring-1 ring-sky-500/20">{item.dates}</span>
+                            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">{item.company}</div>
+                            {item.description && (<p className="mt-3 text-gray-600 dark:text-gray-300">{item.description}</p>)}
+                            {item.skills && (
+                              <div className="mt-4 pt-4 border-t border-gray-200/60 dark:border-gray-800/70 flex flex-wrap gap-2">
+                                {item.skills.map((skill, i) => (
+                                  <span key={i} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">{skill}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-                      {item.position}
-                    </h3>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-                      <span className="font-medium text-gray-800 dark:text-gray-200">{item.company}</span>
-                      <span className="hidden sm:inline text-gray-400">•</span>
-                      <span className="text-gray-600 dark:text-gray-400">{item.dates}</span>
-                    </div>
-                    <p className="mt-3 text-gray-600 dark:text-gray-300">{item.description}</p>
-                    {item.skills && (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {item.skills.map((skill, i) => (
-                          <span 
-                            key={i} 
-                            className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-                          >
-                            {skill}
-                          </span>
-                        ))}
+                </div>
+
+                {/* Right column (odd indexes on right in md+) */}
+                <div className={`${index % 2 === 0 ? 'md:col-start-2 md:pl-10' : 'md:col-start-2 md:order-1 md:pr-10'}`}>
+                  {index % 2 !== 0 && (
+                    <div className="hidden md:block card card-hover">
+                      <div className="p-6">
+                        <div className="flex items-start gap-4">
+                          {item.logo && (
+                            <div className="flex-shrink-0">
+                              <div className="p-2 bg-white/80 dark:bg-gray-900/70 rounded-xl ring-1 ring-gray-200/70 dark:ring-gray-800/70">
+                                <img src={item.logo} alt={`${item.company} logo`} className="w-12 h-12 object-contain" />
+                              </div>
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">{item.position}</h3>
+                            <span className="mt-2 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-sky-500/10 text-sky-600 dark:text-sky-300 ring-1 ring-sky-500/20">{item.dates}</span>
+                            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">{item.company}</div>
+                            {item.description && (<p className="mt-3 text-gray-600 dark:text-gray-300">{item.description}</p>)}
+                            {item.skills && (
+                              <div className="mt-4 pt-4 border-t border-gray-200/60 dark:border-gray-800/70 flex flex-wrap gap-2">
+                                {item.skills.map((skill, i) => (
+                                  <span key={i} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">{skill}</span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
