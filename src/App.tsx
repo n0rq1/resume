@@ -193,7 +193,7 @@ function App() {
         <Education />
       </main>
       <footer className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p> {new Date().getFullYear()} Austin Norquist. All rights reserved.</p>
+        <p> {new Date().getFullYear()} Austin Norquist</p>
       </footer>
     </div>
   );
